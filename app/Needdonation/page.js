@@ -1,27 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import PageBanner from "@/components/PageBanner";
 import AkpagerLayout from "@/layouts/AkpagerLayout";
-
-const Accordion = dynamic(
-  () => import("react-bootstrap").then((mod) => mod.Accordion),
-  {
-    ssr: false,
-  }
-);
-
-const Page = () => {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return null;
-  }
-
+import { Accordion } from "react-bootstrap";
+const page = () => {
   return (
     <AkpagerLayout>
       <PageBanner pageName={"Need Donation"} />
@@ -271,5 +252,4 @@ const Page = () => {
     </AkpagerLayout>
   );
 };
-
-export default Page;
+export default page;
