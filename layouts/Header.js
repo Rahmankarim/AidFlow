@@ -1,19 +1,10 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect, Fragment } from "react";
 import Link from "next/link";
-import { Fragment } from "react";
 import { Accordion } from "react-bootstrap";
 
-window.addEventListener("scroll", function () {
-  const header = document.querySelector(".main-header, .menu-btns");
-  if (window.scrollY > 50) {
-    header.classList.add("scrolled");
-  } else {
-    header.classList.remove("scrolled");
-  }
-});
-
-const Header = ({ header, onePage }) => {
+const Header = ({ header = 1, onePage = false }) => {
   switch (header) {
     case 1:
       return <DefaultHeader onePage={onePage} />;
@@ -34,7 +25,7 @@ const Header = ({ header, onePage }) => {
     case 9:
       return <Header9 onePage={onePage} />;
     case 10:
-      return <HeaderNotFound />;
+      return <HeaderNotFound onePage={onePage} />;
     default:
       return <DefaultHeader onePage={onePage} />;
   }
@@ -44,6 +35,21 @@ export default Header;
 const DefaultHeader = ({ onePage }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    // Add scroll event listener
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup event listener
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const menus = [
     { id: 1, href: "home", title: "Home" },
@@ -65,8 +71,11 @@ const DefaultHeader = ({ onePage }) => {
   };
 
   return (
-    <header className="main-header menu-absolute header-white no-border">
-      {/*Header-Upper*/}
+    <header
+      className={`main-header menu-absolute header-white no-border ${
+        isScrolled ? "scrolled" : ""
+      }`}
+    >
       <div className="header-upper">
         <div className="container container-1660 clearfix">
           <div className="header-inner py-15 rel d-flex align-items-center">
@@ -74,7 +83,7 @@ const DefaultHeader = ({ onePage }) => {
               <div className="logo">
                 <Link href="/">
                   <img
-                    src="assets/images/charity2/logof.png"
+                    src="/assets/images/charity2/logof.png"
                     alt="Logo"
                     title="Logo"
                     style={{ width: "150px" }}
@@ -85,7 +94,7 @@ const DefaultHeader = ({ onePage }) => {
             <div className="nav-outer ms-lg-auto clearfix">
               <nav className="main-menu navbar-expand-lg">
                 <Nav
-                  logo="assets/images/logos/logo.png"
+                  logo="/assets/images/logos/logo.png"
                   menus={menus}
                   onePage={onePage}
                 />
@@ -95,10 +104,10 @@ const DefaultHeader = ({ onePage }) => {
             <div className="menu-btns ms-lg-auto">
               {!isLoggedIn ? (
                 <>
-                  <Link href="sign-in" className="light-btn loginbtn">
+                  <Link href="/sign-in" className="light-btn loginbtn">
                     Log In
                   </Link>
-                  <Link href="sign-up" className="theme-btn">
+                  <Link href="/sign-up" className="theme-btn">
                     Sign Up Free <i className="far fa-arrow-right" />
                   </Link>
                 </>
@@ -109,7 +118,6 @@ const DefaultHeader = ({ onePage }) => {
           </div>
         </div>
       </div>
-      {/*End Header Upper*/}
     </header>
   );
 };
@@ -125,7 +133,6 @@ const Header7 = ({ onePage }) => {
   ];
   return (
     <header className="main-header menu-absolute no-border">
-      {/* Start Header-Upper*/}
       <div className="header-upper">
         <div className="container container-1660 clearfix">
           <div className="header-inner py-20 rel d-flex align-items-center">
@@ -133,7 +140,7 @@ const Header7 = ({ onePage }) => {
               <div className="logo">
                 <Link href="/">
                   <img
-                    src="assets/images/charity2/logof.png"
+                    src="/assets/images/charity2/logof.png"
                     alt="Logo"
                     title="Logo"
                     style={{ width: "150px" }}
@@ -142,23 +149,20 @@ const Header7 = ({ onePage }) => {
               </div>
             </div>
             <div className="nav-outer ms-lg-auto clearfix">
-              {/* Main Menu */}
               <nav className="main-menu navbar-expand-lg">
                 <Nav
                   onePage={onePage}
-                  logo="assets/images/logos/logo5.png"
+                  logo="/assets/images/logos/logo5.png"
                   menus={menus}
                 />
               </nav>
-              {/* Main Menu End*/}
             </div>
 
-            {/* Menu Button */}
             <div className="menu-btns ms-lg-auto">
-              <Link href="sign-in" className="light-btn">
+              <Link href="/sign-in" className="light-btn">
                 Log In
               </Link>
-              <Link href="sign-up" className="theme-btn">
+              <Link href="/sign-up" className="theme-btn">
                 Sign Up Free <i className="far fa-arrow-right" />
               </Link>
             </div>
@@ -171,7 +175,6 @@ const Header7 = ({ onePage }) => {
           <span />
         </div>
       </div>
-      {/*End Header Upper*/}
     </header>
   );
 };
@@ -179,7 +182,6 @@ const Header7 = ({ onePage }) => {
 const HeaderNotFound = ({ onePage }) => {
   return (
     <header className="main-header menu-absolute no-border">
-      {/*Header-Upper*/}
       <div className="header-upper">
         <div className="container container-1660 clearfix">
           <div className="header-inner py-15 rel d-flex align-items-center">
@@ -187,7 +189,7 @@ const HeaderNotFound = ({ onePage }) => {
               <div className="logo">
                 <Link href="/">
                   <img
-                    src="assets/images/logos/logo6.png"
+                    src="/assets/images/logos/logo6.png"
                     alt="Logo"
                     title="Logo"
                   />
@@ -195,35 +197,30 @@ const HeaderNotFound = ({ onePage }) => {
               </div>
             </div>
             <div className="nav-outer ms-lg-auto clearfix">
-              {/* Main Menu */}
               <nav className="main-menu navbar-expand-lg">
-                <Nav onePage={onePage} logo="assets/images/logos/logo6.png" />
+                <Nav onePage={onePage} logo="/assets/images/logos/logo6.png" />
               </nav>
-              {/* Main Menu End*/}
             </div>
-            {/* Nav Search */}
             <div className="nav-search ms-xl-2 ms-4 py-10">
               <NavSearch />
             </div>
-            {/* Menu Button */}
             <div className="menu-btns ms-lg-auto d-none d-xl-flex">
-              <Link href="contact" className="theme-btn">
+              <Link href="/contact" className="theme-btn">
                 Get Started <i className="far fa-arrow-right" />
               </Link>
             </div>
           </div>
         </div>
       </div>
-      {/*End Header Upper*/}
     </header>
   );
 };
 
 const Nav = ({
-  logo = "assets/images/charity2/logof.png",
+  logo = "/assets/images/charity2/logof.png",
   dark,
   onePage,
-  menus,
+  menus = [],
 }) => {
   return (
     <Fragment>
@@ -232,13 +229,12 @@ const Nav = ({
           <div className="mobile-logo">
             <Link href="/">
               <img
-                src="assets/images/charity2/logof.png"
+                src="/assets/images/charity2/logof.png"
                 alt="Logo"
                 title="Logo"
               />
             </Link>
           </div>
-          {/* Toggle Button */}
           <Accordion.Toggle
             as={"button"}
             className="navbar-toggle"
@@ -249,28 +245,28 @@ const Nav = ({
             <span className={`icon-bar ${dark ? "bg-dark" : ""}`} />
           </Accordion.Toggle>
         </div>
-        <div eventKey="navbar-collapse" className="navbar-collapse clearfix">
+        <div className="navbar-collapse clearfix">
           {onePage ? (
             <ul className="navigation onepage clearfix">
               {menus.map((menu) => (
                 <li key={menu.id}>
-                  <a href={`#${menu.href}`}>{menu.title}</a>
+                  <Link href={`#${menu.href}`}>{menu.title}</Link>
                 </li>
               ))}
             </ul>
           ) : (
             <ul className="navigation clearfix">
               <li>
-                <a href="/">Home</a>
+                <Link href="/">Home</Link>
               </li>
               <li>
-                <a href="about">About</a>
+                <Link href="/about">About</Link>
               </li>
               <li>
-                <a href="causes">causes</a>
+                <Link href="/causes">causes</Link>
               </li>
               <li>
-                <a href="contact">Contact</a>
+                <Link href="/contact">Contact</Link>
               </li>
             </ul>
           )}
@@ -281,13 +277,12 @@ const Nav = ({
           <div className="mobile-logo">
             <Link href="/">
               <img
-                src="assets/images/charity2/logof.png"
+                src="/assets/images/charity2/logof.png"
                 alt="Logo"
                 title="Logo"
               />
             </Link>
           </div>
-          {/* Toggle Button */}
           <Accordion.Toggle
             as={"button"}
             className="navbar-toggle"
@@ -309,7 +304,7 @@ const Nav = ({
   );
 };
 
-const MobileMenu = ({ sidebar, onePage, menus }) => {
+const MobileMenu = ({ sidebar, onePage, menus = [] }) => {
   return (
     <Fragment>
       {onePage ? (
@@ -320,26 +315,29 @@ const MobileMenu = ({ sidebar, onePage, menus }) => {
         >
           {menus.map((menu) => (
             <li key={menu.id}>
-              <a href={`#${menu.href}`}>{menu.title}</a>
+              <Link href={`#${menu.href}`}>{menu.title}</Link>
             </li>
           ))}
         </ul>
       ) : (
         <ul className={`${sidebar ? "sidebar-menu" : "navigation"} clearfix`}>
           <li>
-            <a href="/">Home</a>
+            <Link href="/">Home</Link>
           </li>
           <li>
-            <a href="about">About</a>
+            <Link href="/about">About</Link>
           </li>
           <li>
-            <a href="causes">causes</a>
+            <Link href="/causes">causes</Link>
           </li>
           <li>
-            <a href="contact">Contact</a>
+            <Link href="/contact">Contact</Link>
           </li>
         </ul>
       )}
     </Fragment>
   );
 };
+
+// Placeholder for NavSearch component - you'll need to implement this
+const NavSearch = () => null;
